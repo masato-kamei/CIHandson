@@ -18,6 +18,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val unused = 123
+
         enableEdgeToEdge()
         setContent {
             CIHandsonTheme {
@@ -35,7 +37,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
-        text = "Good afternoon" + name,
+        text = "Good afternoon $name!",
         modifier = modifier
     )
 }
