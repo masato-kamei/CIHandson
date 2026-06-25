@@ -1,6 +1,7 @@
 package jp.co.fnl.kamei.cihandson
 
 import android.os.Bundle
+import android.os.Handler
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -17,8 +18,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // ★ lintエラーを発生させるためのコード（compileは通る）
-        val unused = 124  // 未使用変数（通常はWarning）
+        val unused = 123
 
         enableEdgeToEdge()
         setContent {

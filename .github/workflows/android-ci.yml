@@ -1,13 +1,17 @@
-name: Android CI (Fast + Lint)
+name: Android CI (Fast + Lint Summary)
 
 on:
   pull_request:
     branches:
       - master
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   build:
-    name: Compile + Lint (fast)
+    name: Compile + Lint summary
     runs-on: ubuntu-latest
 
     steps:
@@ -20,18 +24,47 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      # キャッシュ＋Gradle高速化
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
       - name: Grant execute permission
         run: chmod +x gradlew
 
-      # ✅ コンパイル（最速チェック）
       - name: Compile
         run: ./gradlew compileDebugSources --parallel
 
-      # ✅ lint（最小構成）
-      - name: Lint
+      - name: Lint non-blocking for warnings
         run: ./gradlew lintDebug
-  ``
+
+      - name: Create lint warning summary
+        shell: bash
+        run: |
+          REPORT="app/build/reports/lint-results-debug.txt"
+          OUT="lint-warning-summary.md"
+
+          echo "## Android Lint warnings" > "$OUT"
+          echo "" >> "$OUT"
+
+          if [ -f "$REPORT" ]; then
+            grep " Warning: " "$REPORT" \
+              | sed -E 's#^/home/runner/work/[^/]+/[^/]+/##' \
+              | head -n 50 \
+              | sed 's/^/- /' >> "$OUT"
+          else
+            echo "- lint text report was not found." >> "$OUT"
+          fi
+
+          if [ "$(wc -l < "$OUT")" -le 2 ]; then
+            echo "- No lint warnings found." >> "$OUT"
+          fi
+
+      - name: Comment lint warning summary
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          path: lint-warning-summary.md
+
+      - name: Upload full lint reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-lint-reports
+          path: app/build/reports/
