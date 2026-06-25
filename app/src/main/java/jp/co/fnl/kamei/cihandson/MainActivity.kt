@@ -18,7 +18,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         // ★ lintエラーを発生させるためのコード（compileは通る）
-        val unused = 124  // 未使用変数（通常はWarning）
+        val unused = 125  // 未使用変数（通常はWarning）
 
         enableEdgeToEdge()
         setContent {
