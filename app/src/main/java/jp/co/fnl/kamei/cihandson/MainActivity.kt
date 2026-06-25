@@ -1,6 +1,7 @@
 package jp.co.fnl.kamei.cihandson
 
 import android.os.Bundle
+import android.os.Handler
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -19,6 +20,11 @@ class MainActivity : ComponentActivity() {
 
         // ★ lintエラーを発生させるためのコード（compileは通る）
         val unused = 125  // 未使用変数（通常はWarning）
+
+        // ★ これを追加（lint Errorになる可能性が高い）
+        Handler().postDelayed({
+            println("Hello from background")
+        }, 1000)
 
         enableEdgeToEdge()
         setContent {
