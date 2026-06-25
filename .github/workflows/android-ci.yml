@@ -1,4 +1,4 @@
-name: Android CI (Fast)
+name: Android CI (Fast + Lint)
 
 on:
   pull_request:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    name: Compile only (fast)
+    name: Compile + Lint (fast)
     runs-on: ubuntu-latest
 
     steps:
@@ -20,13 +20,18 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      # Gradleキャッシュ（高速化のコア）
+      # キャッシュ＋Gradle高速化
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
       - name: Grant execute permission
         run: chmod +x gradlew
 
-      # コンパイルのみ（最速）
+      # ✅ コンパイル（最速チェック）
       - name: Compile
         run: ./gradlew compileDebugSources --parallel
+
+      # ✅ lint（最小構成）
+      - name: Lint
+        run: ./gradlew lintDebug
+  ``
