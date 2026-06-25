@@ -34,7 +34,7 @@ jobs:
         run: ./gradlew compileDebugSources --parallel
 
       - name: Lint non-blocking for warnings
-        run: ./gradlew lintDebug || true
+        run: ./gradlew lintDebug
 
       - name: Create lint warning summary
         shell: bash
