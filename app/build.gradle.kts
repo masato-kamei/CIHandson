@@ -32,8 +32,19 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    buildFeatures {
-        compose = true
+
+    lint {
+        warningsAsErrors = false
+        abortOnError = true
+
+        textReport = true
+        textOutput = layout.buildDirectory.file("reports/lint-results-debug.txt").get().asFile
+
+        htmlReport = true
+        xmlReport = true
+
+        explainIssues = false
+        noLines = true
     }
 }
 
