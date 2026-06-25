@@ -34,4 +34,3 @@ jobs:
       # ✅ lint（最小構成）
       - name: Lint
         run: ./gradlew lintDebug
-  ``
