@@ -18,14 +18,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // ★ lintエラーを発生させるためのコード（compileは通る）
-        val unused = 125  // 未使用変数（通常はWarning）
-
-        // ★ これを追加（lint Errorになる可能性が高い）
-        Handler().postDelayed({
-            println("Hello from background")
-        }, 1000)
-
         enableEdgeToEdge()
         setContent {
             CIHandsonTheme {
@@ -43,7 +35,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
-        text = "Good afternoon $name!",
+        text = "Good afternoon" + name,
         modifier = modifier
     )
 }
