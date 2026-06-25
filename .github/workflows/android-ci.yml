@@ -1,4 +1,4 @@
-name: Android CI
+name: Android CI (Fast)
 
 on:
   pull_request:
@@ -7,21 +7,26 @@ on:
 
 jobs:
   build:
-    name: Build Android
+    name: Compile only (fast)
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up JDK
+      - name: Setup JDK
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
+      # Gradleキャッシュ（高速化のコア）
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
       - name: Grant execute permission
         run: chmod +x gradlew
 
-      - name: Build
-        run: ./gradlew assembleDebug
+      # コンパイルのみ（最速）
+      - name: Compile
+        run: ./gradlew compileDebugSources --parallel
