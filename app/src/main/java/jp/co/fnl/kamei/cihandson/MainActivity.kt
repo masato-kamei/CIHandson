@@ -16,12 +16,16 @@ import jp.co.fnl.kamei.cihandson.ui.theme.CIHandsonTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // ★ lintエラーを発生させるためのコード（compileは通る）
+        val unused = 124  // 未使用変数（通常はWarning）
+
         enableEdgeToEdge()
         setContent {
             CIHandsonTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
-                        name = "Android",
+                        name = "Android",  // ★ ここがlintで引っかかる（HardcodedText）
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -33,7 +37,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
-        text = "Good morning $name!",
+        text = "Good afternoon $name!",
         modifier = modifier
     )
 }
