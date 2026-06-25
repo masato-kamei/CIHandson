@@ -5,6 +5,10 @@ on:
     branches:
       - master
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   build:
     name: Compile + Lint (report)
@@ -26,15 +30,12 @@ jobs:
       - name: Grant execute permission
         run: chmod +x gradlew
 
-      # compileは通常通り（failする）
       - name: Compile
         run: ./gradlew compileDebugSources --parallel
 
-      # lintはfailさせない（重要）
       - name: Lint (non-blocking)
-        run: ./gradlew lintDebug || true
+        run: ./gradlew lintDebug --console=plain || true
 
-      # lint結果をPRにコメント
       - name: Comment lint result
         uses: marocchino/sticky-pull-request-comment@v2
         with:
