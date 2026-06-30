@@ -15,36 +15,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: ソースコード取得
         uses: actions/checkout@v4
 
-      - name: Setup JDK
+      - name: Java環境セットアップ
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
-      - name: Setup Gradle
+      - name: Gradleキャッシュ設定
         uses: gradle/actions/setup-gradle@v3
 
-      - name: Grant execute permission
+      - name: gradlewへ実行権限付与
         run: chmod +x gradlew
 
-      - name: Compile
+      - name: コンパイル実行
         run: ./gradlew compileDebugSources --parallel
 
-      - name: Lint non-blocking for warnings
+      - name: Lint実行
         run: ./gradlew lintDebug
 
-      - name: Create lint warning summary
+      - name: Lint警告サマリ生成
         shell: bash
         run: |
           REPORT="app/build/reports/lint-results-debug.txt"
           OUT="lint-warning-summary.md"
-
+    
           echo "## Android Lint warnings" > "$OUT"
           echo "" >> "$OUT"
-
+    
           if [ -f "$REPORT" ]; then
             grep " Warning: " "$REPORT" \
               | sed -E 's#^/home/runner/work/[^/]+/[^/]+/##' \
@@ -53,17 +53,17 @@ jobs:
           else
             echo "- lint text report was not found." >> "$OUT"
           fi
-
+    
           if [ "$(wc -l < "$OUT")" -le 2 ]; then
             echo "- No lint warnings found." >> "$OUT"
           fi
 
-      - name: Comment lint warning summary
+      - name: Lint警告をPRへ投稿
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           path: lint-warning-summary.md
 
-      - name: Upload full lint reports
+      - name: Lintレポート保存
         uses: actions/upload-artifact@v4
         with:
           name: android-lint-reports
