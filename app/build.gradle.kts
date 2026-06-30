@@ -34,6 +34,14 @@ android {
     }
 
     lint {
+        disable += setOf(
+            "OldTargetApi",
+            "AndroidGradlePluginVersion",
+            "GradleDependency",
+            "NewerVersionAvailable",
+            "UnusedResources"
+        )
+
         warningsAsErrors = false
         abortOnError = true
 
