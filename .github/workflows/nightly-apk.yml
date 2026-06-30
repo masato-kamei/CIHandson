@@ -19,38 +19,38 @@ jobs:
       ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
 
     steps:
-      - name: Checkout
+      - name: ソースコード取得
         uses: actions/checkout@v4
 
-      - name: Setup JDK
+      - name: Java環境セットアップ
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
-      - name: Setup Gradle
+      - name: Gradleキャッシュ設定
         uses: gradle/actions/setup-gradle@v3
 
-      - name: Grant execute permission
+      - name: gradlewへ実行権限付与
         run: chmod +x gradlew
 
-      - name: Restore keystore
+      - name: 署名鍵を復元
         run: |
           echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > app/cihandsonkeystore.jks
 
-      - name: Run full lint
+      - name: Release向けLint実行
         run: ./gradlew lintRelease || true
 
-      - name: Build Release APK
+      - name: 署名付きAPK生成
         run: ./gradlew assembleRelease --parallel
 
-      - name: Upload APK
+      - name: APKをArtifactへ保存
         uses: actions/upload-artifact@v4
         with:
           name: signed-apk
           path: app/build/outputs/apk/release/*.apk
 
-      - name: Upload Lint Report
+      - name: LintレポートをArtifactへ保存
         uses: actions/upload-artifact@v4
         with:
           name: lint-report
