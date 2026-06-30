@@ -2,7 +2,6 @@ name: Nightly Signed APK Build
 
 on:
   schedule:
-    # JST 0:00 = UTC 15:00
     - cron: "0 15 * * *"
 
   workflow_dispatch:
@@ -13,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
+      NIGHTLY_LINT: true
+
       ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
       ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
       ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
@@ -37,11 +38,20 @@ jobs:
         run: |
           echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > app/cihandsonkeystore.jks
 
+      - name: Run full lint
+        run: ./gradlew lintRelease || true
+
       - name: Build Release APK
         run: ./gradlew assembleRelease --parallel
 
-      - name: Upload Signed APK
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: signed-apk
           path: app/build/outputs/apk/release/*.apk
+
+      - name: Upload Lint Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint-report
+          path: app/build/reports/

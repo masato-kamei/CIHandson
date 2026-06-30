@@ -34,13 +34,18 @@ android {
     }
 
     lint {
-        disable += setOf(
-            "OldTargetApi",
-            "AndroidGradlePluginVersion",
-            "GradleDependency",
-            "NewerVersionAvailable",
-            "UnusedResources"
-        )
+        val nightlyLint =
+            System.getenv("NIGHTLY_LINT") == "true"
+
+        if (!nightlyLint) {
+            disable += setOf(
+                "OldTargetApi",
+                "AndroidGradlePluginVersion",
+                "GradleDependency",
+                "NewerVersionAvailable",
+                "UnusedResources"
+            )
+        }
 
         warningsAsErrors = false
         abortOnError = true
