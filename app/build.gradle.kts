@@ -46,6 +46,22 @@ android {
         explainIssues = false
         noLines = true
     }
+
+    signingConfigs {
+        create("release") {
+            storeFile = file("cihandsonkeystore.jks")
+            storePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD")
+            keyAlias = System.getenv("ANDROID_KEY_ALIAS")
+            keyPassword = System.getenv("ANDROID_KEY_PASSWORD")
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig = signingConfigs.getByName("release")
+        }
+    }
+
 }
 
 dependencies {
